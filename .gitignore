@@ -1,3 +1,5 @@
+/.venv*
+
 # dynamically created during build
 bleachbit/Revision.py
 
