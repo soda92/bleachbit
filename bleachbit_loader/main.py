@@ -50,10 +50,13 @@ def main():
         check=True,
     )
     create_shortcut()
-    with CD(CURRENT):
-        subprocess.run(
-            [str_path(venv_path.joinpath("bin/python.exe")), "impl.py"], check=True
-        )
+    subprocess.run(
+        [
+            r"C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe",
+            str_path(CURRENT.joinpath("launcher.ps1")),
+        ],
+        check=True,
+    )
 
 
 if __name__ == "__main__":
