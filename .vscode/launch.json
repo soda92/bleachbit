@@ -12,7 +12,18 @@
             "console": "integratedTerminal",
             "env": {
                 "PYTHONPATH": "${workspaceFolder}"
-            }
+            },
+        },
+        {
+            "name": "Main",
+            "python": "${workspaceFolder}/bleachbit_venv/bin/python.exe",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/bleachbit_loader/impl.py",
+            "console": "integratedTerminal",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/bleachbit_loader"
+            },
         }
     ]
 }

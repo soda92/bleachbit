@@ -1,7 +1,7 @@
 [project]
 name = "bleachbit"
-version = "2025.2.9.3"
-description = "Clean Your System and Free Disk Space"
+version = "2025.2.9.4"
+description = "Clean Your System and Free Disk Space."
 readme = "README_soda.md"
 requires-python = ">=3.10"
 dependencies = ["msys2_env", "winshell"]
@@ -14,7 +14,7 @@ Repository = "https://github.com/soda92/bleachbit"
 bleachbit = "bleachbit_loader.main:main"
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-build-scripts"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.sdist]
@@ -25,6 +25,7 @@ packages = [
     "bleachbit_loader.bleachbit.markovify",
     "bleachbit_loader.data",
     "bleachbit_loader.cleaners",
+    "bleachbit_loader.windows",
 ]
 include = ["*.ico", "*.ps1", "*.ui", "*.xml"]
 exclude = ["*.kra", "__pycache__"]
@@ -36,7 +37,18 @@ packages = [
     "bleachbit_loader.bleachbit",
     "bleachbit_loader.bleachbit.markovify",
     "bleachbit_loader.data",
+    "bleachbit_loader.windows",
     "bleachbit_loader.cleaners",
 ]
 include = ["*.ico", "*.ps1", "*.ui", "*.xml"]
 exclude = ["*.kra", "__pycache__"]
+
+[[tool.hatch.build.hooks.build-scripts.scripts]]
+work_dir = "."
+out_dir = "bleachbit_loader/__pycache__"
+commands = [
+    "powershell bleachbit_loader/build.ps1",
+]
+artifacts = [
+    "bleachbit_loader/tmp.txt",
+]

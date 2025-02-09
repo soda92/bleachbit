@@ -2,3 +2,6 @@
 /cleaners
 /data
 /themes
+/windows
+/tmp.txt
+__pycache__
