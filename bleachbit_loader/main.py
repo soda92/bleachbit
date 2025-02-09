@@ -26,8 +26,8 @@ def create_shortcut():
 
     winshell.CreateShortcut(
         Path=str_path(Path(winshell.desktop()).joinpath("BleachBit (New).lnk")),
-        Target=str_path(venv_path.joinpath("bin/python.exe")),
-        Arguments=str_path(CURRENT.joinpath("impl.py")),
+        Target=r"C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe",
+        Arguments=str_path(CURRENT.joinpath("launcher.ps1")),
         Icon=[str_path(CURRENT.joinpath("bleachbit.ico")), 0],
         Description="Clean Your System and Free Disk Space.",
     )
