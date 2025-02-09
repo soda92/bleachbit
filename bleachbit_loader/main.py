@@ -18,10 +18,23 @@ def str_path(p: Path):
 
 
 CURRENT = Path(__file__).resolve().parent
+venv_path = CURRENT.parent.joinpath("bleachbit_venv")
+
+
+def create_shortcut():
+    import winshell
+
+    winshell.CreateShortcut(
+        Path=str_path(Path(winshell.desktop()).joinpath("BleachBit (New).lnk")),
+        Target=str_path(venv_path.joinpath("bin/python.exe")),
+        Arguments=str_path(CURRENT.joinpath("impl.py")),
+        Icon=[str_path(CURRENT.joinpath("bleachbit.ico")), 0],
+        Description="Clean Your System and Free Disk Space.",
+    )
+    pass
 
 
 def main():
-    venv_path = CURRENT.parent.joinpath("bleachbit_venv")
     if not venv_path.exists():
         with CD(CURRENT.parent):
             subprocess.run("msys2_env --init".split(), check=True)
@@ -29,12 +42,14 @@ def main():
     p = "ucrt64/mingw-w64-ucrt-x86_64-"
     subprocess.run(
         [
-            venv_path.joinpath("bin/fish.ps1"),
+            "powershell.exe",
+            str_path(venv_path.joinpath("bin/fish.ps1")),
             "-c",
-            f"pacman -S --noconfirm --needed {p}python-gobject {p}gtk3",
+            f"'pacman -S --noconfirm --needed {p}python-gobject {p}gtk3 {p}python-pywin32'",
         ],
         check=True,
     )
+    create_shortcut()
     with CD(CURRENT):
         subprocess.run(
             [str_path(venv_path.joinpath("bin/python.exe")), "impl.py"], check=True
