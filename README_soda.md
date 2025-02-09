@@ -7,3 +7,10 @@
 ## Usage
 
 `bleachbit.exe`: start bleachbit.
+
+
+## Note on Administrator rights
+
+This program has been modified to not require UAC prompt. If you want to start it as admin, use a tool like [surun][s] or right click desktop shortcut to start as admin.
+
+[surun]: https://kay-bruns.de/wp/software/surun/

@@ -1,62 +1,45 @@
-#!/usr/bin/python3
-# vim: ts=4:sw=4:expandtab
-
-# BleachBit
-# Copyright (C) 2008-2025 Andrew Ziem
-# https://www.bleachbit.org
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-"""
-Launcher
-"""
-
+from pathlib import Path
+import contextlib
 import os
-import sys
+import subprocess
+
+
+@contextlib.contextmanager
+def CD(d: Path):
+    old = os.getcwd()
+    os.chdir(d)
+    yield
+    os.chdir(old)
+
+
+def str_path(p: Path):
+    p = p.resolve()
+    return str(p).replace("\\", "/")
+
+
+CURRENT = Path(__file__).resolve().parent
 
 
 def main():
-    if 'posix' == os.name:
-        if os.path.isdir('/usr/share/bleachbit'):
-            # This path contains bleachbit/{C,G}LI.py .  This section is
-            # unnecessary if installing BleachBit in site-packages.
-            sys.path.append('/usr/share/')
+    venv_path = CURRENT.parent.joinpath("bleachbit_venv")
+    if not venv_path.exists():
+        with CD(CURRENT.parent):
+            subprocess.run("msys2_env --init".split(), check=True)
+            subprocess.run("msys2_env --venv bleachbit_venv".split(), check=True)
+    p = "ucrt64/mingw-w64-ucrt-x86_64-"
+    subprocess.run(
+        [
+            venv_path.joinpath("bin/fish.ps1"),
+            "-c",
+            f"pacman -S --noconfirm --needed {p}python-gobject {p}gtk3",
+        ],
+        check=True,
+    )
+    with CD(CURRENT):
+        subprocess.run(
+            [str_path(venv_path.joinpath("bin/python.exe")), "impl.py"], check=True
+        )
 
-        # The two imports from bleachbit must come after sys.path.append(..)
-        import bleachbit.Unix
-        from bleachbit.Language import get_text as _
 
-        if (
-            bleachbit.Unix.is_display_protocol_wayland_and_root_not_allowed()
-        ):
-            print(_('To run a GUI application on Wayland with root, allow access with this command:\n'
-                'xhost si:localuser:root\n'
-                    'See more about xhost at https://docs.bleachbit.org/doc/frequently-asked-questions.html'))
-            sys.exit(1)
-
-    if os.name == 'nt':
-        # change error handling to avoid popup with GTK 3
-        # https://github.com/bleachbit/bleachbit/issues/651
-        import win32api
-        import win32con
-        win32api.SetErrorMode(win32con.SEM_FAILCRITICALERRORS |
-                            win32con.SEM_NOGPFAULTERRORBOX | win32con.SEM_NOOPENFILEERRORBOX)
-
-    if 1 == len(sys.argv):
-        import bleachbit.GUI
-        app = bleachbit.GUI.Bleachbit()
-        sys.exit(app.run(sys.argv))
-    else:
-        import bleachbit.CLI
-        bleachbit.CLI.process_cmd_line()
+if __name__ == "__main__":
+    main()
