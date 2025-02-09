@@ -1,6 +1,6 @@
 [project]
 name = "bleachbit"
-version = "2025.2.9.2"
+version = "2025.2.9.3"
 description = "Clean Your System and Free Disk Space"
 readme = "README_soda.md"
 requires-python = ">=3.10"
@@ -18,9 +18,25 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.sdist]
-packages = ["bleachbit", "bleachbit.markovify", "bleachbit_loader"]
-include = ["*.ico", "*.ps1"]
+ignore-vcs = true
+packages = [
+    "bleachbit_loader",
+    "bleachbit_loader.bleachbit",
+    "bleachbit_loader.bleachbit.markovify",
+    "bleachbit_loader.data",
+    "bleachbit_loader.cleaners",
+]
+include = ["*.ico", "*.ps1", "*.ui", "*.xml"]
+exclude = ["*.kra", "__pycache__"]
 
 [tool.hatch.build.targets.wheel]
-packages = ["bleachbit", "bleachbit.markovify", "bleachbit_loader"]
-include = ["*.ico", "*.ps1"]
+ignore-vcs = true
+packages = [
+    "bleachbit_loader",
+    "bleachbit_loader.bleachbit",
+    "bleachbit_loader.bleachbit.markovify",
+    "bleachbit_loader.data",
+    "bleachbit_loader.cleaners",
+]
+include = ["*.ico", "*.ps1", "*.ui", "*.xml"]
+exclude = ["*.kra", "__pycache__"]
